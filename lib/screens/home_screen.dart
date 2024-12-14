@@ -1,7 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
+import 'package:store_app/models/products_model.dart';
 
+import '../services/get_all_products_services.dart';
 import '../widgets/custom_card.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -21,12 +21,13 @@ class HomeScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.category,
-                color: Colors.grey,
-                size: 35,
-              )),
+            onPressed: () {},
+            icon: const Icon(
+              Icons.category,
+              color: Colors.grey,
+              size: 35,
+            ),
+          ),
         ],
       ),
       body: Padding(
@@ -35,15 +36,41 @@ class HomeScreen extends StatelessWidget {
           right: 10,
           left: 10,
         ),
-        child: GridView.builder(
-          clipBehavior: Clip.none,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 5,
-            mainAxisSpacing: 10,
-          ),
-          itemBuilder: (context, index) {
-            return CustomCard();
+        child: FutureBuilder<List<ProductsModel>>(
+          future: ProductsServices().getAllProducts(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text("Error: ${snapshot.error}"),
+                );
+              } else if (snapshot.hasData && snapshot.data != null) {
+                List<ProductsModel> productsList = snapshot.data!;
+                return GridView.builder(
+                  itemCount: productsList.length,
+                  clipBehavior: Clip.none,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemBuilder: (context, index) {
+                    return CustomCard(
+                      productsModel: productsList[index],
+                    );
+                  },
+                );
+              } else {
+                return const Center(
+                  child: Text("No products found"),
+                );
+              }
+            }
+            return const SizedBox();
           },
         ),
       ),

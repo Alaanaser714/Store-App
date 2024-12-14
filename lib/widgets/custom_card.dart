@@ -1,9 +1,15 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
+import 'package:store_app/models/products_model.dart';
 
 class CustomCard extends StatelessWidget {
-  const CustomCard({
+  CustomCard({
     super.key,
+    required this.productsModel,
   });
+
+  ProductsModel productsModel;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +26,7 @@ class CustomCard extends StatelessWidget {
           ]),
           width: 180,
           height: 140,
-          child: const Card(
+          child: Card(
             elevation: 10,
             child: Padding(
               padding: EdgeInsets.all(8.0),
@@ -29,7 +35,7 @@ class CustomCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    "HandBag",
+                    productsModel.title.substring(0, 7),
                     style: TextStyle(
                       fontSize: 20,
                     ),
@@ -38,7 +44,7 @@ class CustomCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "200\$",
+                        '\$${productsModel.price.toString()}',
                         style: TextStyle(
                           fontSize: 15,
                         ),
@@ -55,10 +61,10 @@ class CustomCard extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: -40,
-          left: 40,
+          top: -50,
+          left: 35,
           child: Image.network(
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnkVLsXVfLbYl1L8uPqSRPpy-2cvZyn8AK4w&s",
+            productsModel.image,
             height: 100,
             width: 100,
           ),
