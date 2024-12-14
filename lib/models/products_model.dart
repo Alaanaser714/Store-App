@@ -1,11 +1,11 @@
 class ProductsModel {
   final int id;
   final String title;
-  final double price;
+  final dynamic price;
   final String description;
   final String category;
   final String image;
-  final Rating rating;
+  final Rating? rating; // الحقل اختياري
 
   ProductsModel({
     required this.id,
@@ -14,36 +14,26 @@ class ProductsModel {
     required this.description,
     required this.category,
     required this.image,
-    required this.rating,
+    this.rating, // لا حاجة لقيم افتراضية
   });
 
   factory ProductsModel.fromJson(Map<String, dynamic> json) {
     return ProductsModel(
       id: json['id'],
       title: json['title'],
-      price: json['price'].toDouble(),
+      price: json['price'],
       description: json['description'],
       category: json['category'],
       image: json['image'],
-      rating: Rating.fromJson(json['rating']),
+      rating: json['rating'] != null
+          ? Rating.fromJson(json['rating']) // إذا كانت موجودة
+          : null, // إذا لم تكن موجودة
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'price': price,
-      'description': description,
-      'category': category,
-      'image': image,
-      'rating': rating.toJson(),
-    };
   }
 }
 
 class Rating {
-  final double rate;
+  final dynamic rate;
   final int count;
 
   Rating({
@@ -53,15 +43,8 @@ class Rating {
 
   factory Rating.fromJson(Map<String, dynamic> json) {
     return Rating(
-      rate: json['rate'].toDouble(),
+      rate: json['rate'], // لا حاجة لقيم افتراضية
       count: json['count'],
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'rate': rate,
-      'count': count,
-    };
   }
 }
