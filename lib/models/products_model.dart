@@ -21,7 +21,7 @@ class ProductsModel {
     return ProductsModel(
       id: json['id'],
       title: json['title'],
-      price: json['price'].toDouble(),
+      price: json['price'],
       description: json['description'],
       category: json['category'],
       image: json['image'],
